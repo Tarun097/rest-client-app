@@ -1,0 +1,117 @@
+/* Container setup */
+.app-container {
+  display: flex;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+/* Request Container */
+.request-container {
+  flex: 1;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-right: 1px solid #ccc;
+  overflow-y: auto;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+/* Form Group Styling */
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+textarea {
+  height: 100px;
+}
+
+/* Buttons */
+.send-btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.send-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Header Fields */
+.header-field {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.header-field input {
+  flex: 1;
+}
+
+.header-field button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.header-field button:hover {
+  background-color: #c82333;
+}
+
+/* Response Container */
+.response-container {
+  flex: 1;
+  padding: 20px;
+  background-color: #ffffff;
+  overflow-y: auto;
+}
+
+.response-code, .response-time {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.response-code {
+  color: #28a745;
+}
+
+.response-code.error {
+  color: #dc3545;
+}
+
+.response-time {
+  color: #17a2b8;
+}
+
+.response {
+  white-space: pre-wrap;
+  background-color: #e9ecef;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 20px;
+}
