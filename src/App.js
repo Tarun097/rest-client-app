@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './App.css';
+import RequestForm from './RequestForm';
+import ResponseDisplay from './ResponseDisplay';
 
 function App() {
   const [url, setUrl] = useState('');
@@ -10,6 +12,7 @@ function App() {
   const [response, setResponse] = useState('');
   const [status, setStatus] = useState('');
   const [time, setTime] = useState('');
+  const [size, setSize] = useState('');
   const [curlCommand, setCurlCommand] = useState('');
 
   const handleHeaderChange = (index, field, value) => {
@@ -57,10 +60,15 @@ function App() {
       setResponse(res.data);
       setStatus(res.status.toString());
       setTime(endTime - startTime);
+
+      // Calculate response size
+      const size = new TextEncoder().encode(JSON.stringify(res.data)).length;
+      setSize(size);
     } catch (error) {
       setResponse(error.response ? error.response.data : error.message);
       setStatus(error.response ? error.response.status.toString() : 'Network Error');
       setTime('');
+      setSize('');
     }
   };
 
@@ -75,20 +83,30 @@ function App() {
     lines.forEach(line => {
       if (line.startsWith('curl')) return;
       if (line.startsWith('-X') || line.startsWith('--request')) {
-        newMethod = line.split(' ')[1].trim();
+        const methodParts = line.split(' ');
+        if (methodParts.length > 1) {
+          newMethod = methodParts[1].trim();
+        }
+        console.log('Parsed Method:', newMethod);
       } else if (line.startsWith('--header') || line.startsWith('-H')) {
-        const headerParts = line.split('--header ')[1].split(':');
-        const key = headerParts[0].replace(/['"]/g, '').trim();
-        const value = headerParts.slice(1).join(':').replace(/['"]/g, '').trim();
-        newHeaders.push({ key, value });
+        const headerParts = line.match(/['"]?([^'"]+)['"]?\s*:\s*['"]?([^'"]+)['"]?/);
+        if (headerParts) {
+          const key = headerParts[1].replace(/['"]/g, '').trim();
+          const value = headerParts[2].replace(/['"]/g, '').trim();
+          newHeaders.push({ key, value });
+          console.log('Parsed Header:', { key, value });
+        }
       } else if (line.startsWith('--data-raw') || line.startsWith('-d')) {
         isData = true;
         newBody = line.split('--data-raw ')[1].trim().slice(1, -1);
+        console.log('Parsed Body:', newBody);
       } else {
         newUrl = line.replace(/['"]/g, '').trim();
+        console.log('Parsed URL:', newUrl);
       }
     });
 
+    console.log('Final Parsed Method:', newMethod);
     setUrl(newUrl);
     setMethod(newMethod);
     setHeaders(newHeaders.length > 0 ? newHeaders : [{ key: '', value: '' }]);
@@ -97,71 +115,23 @@ function App() {
 
   return (
     <div className="app-container">
-      <div className="request-container">
-        <h1>REST Client</h1>
-        <div className="form-group">
-          <label>URL</label>
-          <input
-            type="text"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            placeholder="Enter URL"
-          />
-        </div>
-        <div className="form-group">
-          <label>Method</label>
-          <select value={method} onChange={(e) => setMethod(e.target.value)}>
-            <option value="GET">GET</option>
-            <option value="POST">POST</option>
-            <option value="PUT">PUT</option>
-            <option value="DELETE">DELETE</option>
-          </select>
-        </div>
-        <div className="form-group">
-          <label>Headers</label>
-          {headers.map((header, index) => (
-            <div key={index} className="header-field">
-              <input
-                type="text"
-                value={header.key}
-                onChange={(e) => handleHeaderChange(index, 'key', e.target.value)}
-                placeholder="Header Key"
-              />
-              <input
-                type="text"
-                value={header.value}
-                onChange={(e) => handleHeaderChange(index, 'value', e.target.value)}
-                placeholder="Header Value"
-              />
-              <button onClick={() => removeHeaderField(index)}>-</button>
-            </div>
-          ))}
-          <button onClick={addHeaderField}>Add Header</button>
-        </div>
-        <div className="form-group">
-          <label>Request Body (JSON format)</label>
-          <textarea
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
-            placeholder="Request Body (JSON format)"
-          />
-        </div>
-        <div className="form-group">
-          <label>cURL Command</label>
-          <textarea
-            value={curlCommand}
-            onChange={(e) => setCurlCommand(e.target.value)}
-            placeholder="Paste cURL command here"
-          />
-        </div>
-        <button onClick={importCurl} className="import-btn">Import cURL</button>
-        <button onClick={sendRequest} className="send-btn">Send Request</button>
-      </div>
-      <div className="response-container">
-        {status && <div className={`response-code ${status.includes('Error') ? 'error' : ''}`}>Status Code: {status}</div>}
-        {time && <div className="response-time">Time: {time} ms</div>}
-        <pre className="response">{response ? JSON.stringify(response, null, 2) : 'No Response'}</pre>
-      </div>
+      <RequestForm
+        url={url}
+        setUrl={setUrl}
+        method={method}
+        setMethod={setMethod}
+        headers={headers}
+        handleHeaderChange={handleHeaderChange}
+        addHeaderField={addHeaderField}
+        removeHeaderField={removeHeaderField}
+        body={body}
+        setBody={setBody}
+        curlCommand={curlCommand}
+        setCurlCommand={setCurlCommand}
+        importCurl={importCurl}
+        sendRequest={sendRequest}
+      />
+      <ResponseDisplay status={status} time={time} size={size} response={response} />
     </div>
   );
 }

@@ -24,6 +24,10 @@ h1 {
   margin-bottom: 20px;
 }
 
+.curl-section {
+  margin-top: 40px; /* Add margin to separate from the Send Request button */
+}
+
 label {
   display: block;
   margin-bottom: 5px;
@@ -92,7 +96,7 @@ textarea {
   overflow-y: auto;
 }
 
-.response-code, .response-time {
+.response-code, .response-time, .response-size {
   font-weight: bold;
   margin-bottom: 10px;
 }
@@ -107,6 +111,10 @@ textarea {
 
 .response-time {
   color: #17a2b8;
+}
+
+.response-size {
+  color: #ffa500;
 }
 
 .response {
