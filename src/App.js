@@ -10,6 +10,7 @@ function App() {
   const [response, setResponse] = useState('');
   const [status, setStatus] = useState('');
   const [time, setTime] = useState('');
+  const [curlCommand, setCurlCommand] = useState('');
 
   const handleHeaderChange = (index, field, value) => {
     const newHeaders = [...headers];
@@ -63,6 +64,37 @@ function App() {
     }
   };
 
+  const importCurl = () => {
+    const lines = curlCommand.split('\\\n').map(line => line.trim());
+    let newMethod = 'GET';
+    let newUrl = '';
+    let newHeaders = [];
+    let newBody = '';
+    let isData = false;
+
+    lines.forEach(line => {
+      if (line.startsWith('curl')) return;
+      if (line.startsWith('-X') || line.startsWith('--request')) {
+        newMethod = line.split(' ')[1].trim();
+      } else if (line.startsWith('--header') || line.startsWith('-H')) {
+        const headerParts = line.split('--header ')[1].split(':');
+        const key = headerParts[0].replace(/['"]/g, '').trim();
+        const value = headerParts.slice(1).join(':').replace(/['"]/g, '').trim();
+        newHeaders.push({ key, value });
+      } else if (line.startsWith('--data-raw') || line.startsWith('-d')) {
+        isData = true;
+        newBody = line.split('--data-raw ')[1].trim().slice(1, -1);
+      } else {
+        newUrl = line.replace(/['"]/g, '').trim();
+      }
+    });
+
+    setUrl(newUrl);
+    setMethod(newMethod);
+    setHeaders(newHeaders.length > 0 ? newHeaders : [{ key: '', value: '' }]);
+    setBody(isData ? newBody : '');
+  };
+
   return (
     <div className="app-container">
       <div className="request-container">
@@ -114,6 +146,15 @@ function App() {
             placeholder="Request Body (JSON format)"
           />
         </div>
+        <div className="form-group">
+          <label>cURL Command</label>
+          <textarea
+            value={curlCommand}
+            onChange={(e) => setCurlCommand(e.target.value)}
+            placeholder="Paste cURL command here"
+          />
+        </div>
+        <button onClick={importCurl} className="import-btn">Import cURL</button>
         <button onClick={sendRequest} className="send-btn">Send Request</button>
       </div>
       <div className="response-container">
