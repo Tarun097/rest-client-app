@@ -81,11 +81,11 @@ function App() {
     let isData = false;
 
     lines.forEach(line => {
-      if (line.startsWith('curl')) return;
-      if (line.startsWith('-X') || line.startsWith('--request')) {
+      if (line.includes('-X') || line.includes('--request')) {
         const methodParts = line.split(' ');
         if (methodParts.length > 1) {
-          newMethod = methodParts[1].trim();
+          newMethod = methodParts[methodParts.indexOf('-X') + 1] || methodParts[methodParts.indexOf('--request') + 1];
+          newMethod = newMethod.trim();
         }
         console.log('Parsed Method:', newMethod);
       } else if (line.startsWith('--header') || line.startsWith('-H')) {
@@ -96,11 +96,11 @@ function App() {
           newHeaders.push({ key, value });
           console.log('Parsed Header:', { key, value });
         }
-      } else if (line.startsWith('--data-raw') || line.startsWith('-d')) {
+      } else if (line.includes('--data-raw') || line.includes('-d')) {
         isData = true;
         newBody = line.split('--data-raw ')[1].trim().slice(1, -1);
         console.log('Parsed Body:', newBody);
-      } else {
+      } else if (!line.startsWith('curl')) {
         newUrl = line.replace(/['"]/g, '').trim();
         console.log('Parsed URL:', newUrl);
       }
