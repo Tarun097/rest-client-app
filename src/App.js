@@ -141,17 +141,19 @@ function App() {
     <div className="app-container">
       <header className="header">
         <h1>REST Client</h1>
-        <div
-          className="login-icon"
-          onClick={() => setDropdownVisible(!dropdownVisible)}
-        >
-          <i className="fas fa-user"></i>
-          {dropdownVisible && (
-            <div className="dropdown">
-              <a>{username}</a>
-              <a href="#">Logout</a>
-            </div>
-          )}
+        <div className="user-container">
+          <div
+            className="login-icon"
+            onClick={() => setDropdownVisible(!dropdownVisible)}
+          >
+            <i className="fas fa-user"></i>
+            {dropdownVisible && (
+              <div className="dropdown">
+                <a>{username}</a>
+                <a href="#">Logout</a>
+              </div>
+            )}
+          </div>
         </div>
       </header>
       <div className="main-content">
