@@ -27,11 +27,12 @@ const RequestForm = ({
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           placeholder="Enter URL"
+          className="form-control"
         />
       </div>
       <div className="form-group">
         <label>Method</label>
-        <select value={method} onChange={(e) => setMethod(e.target.value)}>
+        <select value={method} onChange={(e) => setMethod(e.target.value)} className="form-control">
           <option value="GET">GET</option>
           <option value="POST">POST</option>
           <option value="PUT">PUT</option>
@@ -49,7 +50,7 @@ const RequestForm = ({
             removeHeaderField={removeHeaderField}
           />
         ))}
-        <button onClick={addHeaderField}>Add Header</button>
+        <button onClick={addHeaderField} className="form-control">Add Header</button>
       </div>
       <div className="form-group">
         <label>Request Body (JSON format)</label>
@@ -57,6 +58,7 @@ const RequestForm = ({
           value={body}
           onChange={(e) => setBody(e.target.value)}
           placeholder="Request Body (JSON format)"
+          className="form-control"
         />
       </div>
       <button onClick={sendRequest} className="send-btn">Send Request</button>
@@ -67,6 +69,7 @@ const RequestForm = ({
           value={curlCommand}
           onChange={(e) => setCurlCommand(e.target.value)}
           placeholder="Paste cURL command here"
+          className="form-control"
         />
         <button onClick={importCurl} className="import-btn">Import cURL</button>
       </div>

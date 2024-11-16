@@ -76,6 +76,9 @@ body, html {
 /* Form Group Styling */
 .form-group {
   margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 .curl-section {
@@ -83,21 +86,22 @@ body, html {
 }
 
 label {
-  display: block;
   margin-bottom: 5px;
   font-weight: bold;
 }
 
-input, select, textarea {
+/* Add a class for consistent form control styling */
+.form-control {
   width: 100%;
   padding: 10px;
   margin-top: 5px;
   margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  box-sizing: border-box;
 }
 
-textarea {
+textarea.form-control {
   height: 100px;
 }
 
@@ -153,7 +157,7 @@ textarea {
 
 /* Response Container */
 .response-container {
-  flex: 1;
+  flex: 3;
   padding: 20px;
   background-color: #ffffff;
   overflow-y: auto;
@@ -190,7 +194,7 @@ textarea {
 
 /* Saved Requests Section */
 .saved-requests {
-  flex: 0 0 10%;
+  flex: 1;
   padding: 20px;
   background-color: #f9f9f9;
   border-right: 1px solid #ccc;
