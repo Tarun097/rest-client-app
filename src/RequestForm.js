@@ -15,11 +15,11 @@ const RequestForm = ({
   curlCommand,
   setCurlCommand,
   importCurl,
-  sendRequest
+  sendRequest,
+  saveRequest
 }) => {
   return (
     <div className="request-container">
-      <h1>REST Client</h1>
       <div className="form-group">
         <label>URL</label>
         <input
@@ -60,6 +60,7 @@ const RequestForm = ({
         />
       </div>
       <button onClick={sendRequest} className="send-btn">Send Request</button>
+      <button onClick={saveRequest} className="save-btn">Save Request</button>
       <div className="form-group curl-section">
         <label>cURL Command</label>
         <textarea
